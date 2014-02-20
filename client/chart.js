@@ -15,7 +15,7 @@ var makeChart = function() {
       var chart_data = google.visualization.arrayToDataTable(data);
 
       var options = {
-        title: 'By category'
+        title: 'Number of projects in each category'
       };
 
       var chart = new google.visualization.PieChart($('#piechart')[0]);
