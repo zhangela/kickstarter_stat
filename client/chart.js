@@ -1,3 +1,19 @@
+var category_names = {
+  1: "Art",
+  3: "Comics",
+  6: "Dance",
+  7: "Design",
+  9: "Fashion",
+  11: "Film and Video",
+  10: "Food",
+  12: "Games",
+  14: "Music",
+  15: "Photography",
+  18: "Publishing",
+  16: "Technology",
+  17: "Theatre"
+};
+
 var makeChart = function() {
   var drawChart = function () {
     $("#piechart").text("loading data...");
@@ -39,8 +55,16 @@ var makeChart = function() {
         var data = column_names.concat(items);
         var chart_data = google.visualization.arrayToDataTable(data);
 
+        var title;
+        if (Session.get("selected_category_id")) {
+          title = 'Funding distribution for ' +
+            category_names[Session.get("selected_category_id")];
+        } else {
+          title = "Funding distribution for all projects";
+        }
+
         var options = {
-          title: 'Funding distribution',
+          title: title,
           enableInteractivity: false
         };
 
