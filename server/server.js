@@ -1,3 +1,19 @@
+var projectsInCategory = function (category_id, fields) {
+  category_id = parseInt(category_id, 10);
+
+  var selector = {
+    $or: [{"category.id": category_id}, {"category.parent_id": category_id}]
+  };
+
+  if (fields) {
+    return Projects.find(selector, {
+      fields: fields
+    });
+  } else {
+    return Projects.find(selector);
+  }
+};
+
 Meteor.methods({
   scrape: function() {
     Projects.remove({});
@@ -45,17 +61,24 @@ Meteor.methods({
     };
 
     var category_counts = _.map(category_names, function(category_name, category_id) {
-      category_id = parseInt(category_id, 10);
-      var selector = {
-        $or: [{"category.id": category_id}, {"category.parent_id": category_id}]
-      };
-
-      console.log(selector);
-      var number_entries = Projects.find(selector).count();
-      console.log(number_entries);
-      return [category_name, number_entries];
+      var number_entries = projectsInCategory(category_id).count();
+      return [category_name, number_entries, category_id];
     });
 
     return category_counts;
+  },
+  getHistogramDataForCategory: function (category_id) {
+    var projects;
+
+    if (category_id) {
+      projects = projectsInCategory(category_id, {name: 1, pledged: 1}).fetch();
+    } else {
+      projects = Projects.find({}, {fields: {name: 1, pledged: 1}}).fetch();
+    }
+
+    return _.map(projects,
+      function (doc) {
+        return [doc.name, doc.pledged];
+      });
   }
 });
