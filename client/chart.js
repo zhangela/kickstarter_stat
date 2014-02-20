@@ -2,6 +2,8 @@ var makeChart = function() {
   var drawChart = function () {
     $("#piechart").text("loading data...");
 
+    Session.set("selected_category_id", null);
+
     Meteor.call("getCategoryPieChartData", function (error, category_counts) {
       // sort by count
       category_counts = _.sortBy(category_counts, function (row) {
@@ -38,7 +40,8 @@ var makeChart = function() {
         var chart_data = google.visualization.arrayToDataTable(data);
 
         var options = {
-          title: 'Funding distribution'
+          title: 'Funding distribution',
+          enableInteractivity: false
         };
 
         var chart = new google.visualization.Histogram($('#histogram')[0]);
