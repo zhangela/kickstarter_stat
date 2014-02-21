@@ -8,28 +8,39 @@
 
 <body>
   <div class="container">
-    <h1>Kickstarter Data</h1>
-    <p>Visualizations of the top 2000 most funded projects of all time</p>
-    <div class="row">
-      <div class="col-md-6">
-        <p>Select a category below to see a filtered distribution in the
-          histogram.</p>
-        <div id="piechart" style="height: 400px"></div>
+    <h1>Kickstarter Top 2000 Most Funded</h1>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Click a category in the pie chart to filter data for the histogram.
       </div>
-      <div class="col-md-6">
-        <div id="histogram" style="height: 400px"></div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div id="piechart" style="height: 400px"></div>
+          </div>
+          <div class="col-md-6">
+            <div id="histogram" style="height: 400px"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div id="locationchart" style="height: 400px"></div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Click a country in the pie chart to filter data for the state chart.
       </div>
-      <div class="col-md-6">
-        <div id="locationhistogram" style="height: 400px"></div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div id="locationchart" style="height: 400px"></div>
+          </div>
+          <div class="col-md-6">
+            <div id="locationhistogram" style="height: 400px"></div>
+          </div>
+        </div>
       </div>
     </div>
-
   </div>
 </body>
 

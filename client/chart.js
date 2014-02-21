@@ -16,7 +16,7 @@ var category_names = {
 
 var makeFundingChart = function() {
   var drawChart = function () {
-    $("#piechart").text("loading data...");
+    $("#piechart").text("Loading data...");
 
     Session.set("selected_category_id", null);
 
@@ -31,7 +31,7 @@ var makeFundingChart = function() {
       var chart_data = google.visualization.arrayToDataTable(data);
 
       var options = {
-        title: '# Projects Per Category'
+        title: 'Number of Projects per Category'
       };
 
       var chart = new google.visualization.PieChart($('#piechart')[0]);
@@ -47,7 +47,7 @@ var makeFundingChart = function() {
   };
 
   var updateHistogram = function () {
-    $("#histogram").text("loading...");
+    $("#histogram").text("Loading...");
 
     Meteor.call("getHistogramDataForCategory",
       Session.get("selected_category_id"), function (error, items) {
@@ -82,7 +82,7 @@ var makeFundingChart = function() {
 var makeLocationChart = function() {
 
   var drawChart = function () {
-    $("#locationchart").text("loading data...");
+    $("#locationchart").text("Loading data...");
 
     Session.set("selected_location_name", null);
 
@@ -97,7 +97,7 @@ var makeLocationChart = function() {
       var chart_data = google.visualization.arrayToDataTable(data);
 
       var options = {
-        title: '# Projects Per Country'
+        title: 'Number of Projects per Country'
       };
 
       var chart = new google.visualization.PieChart($('#locationchart')[0]);
@@ -113,31 +113,30 @@ var makeLocationChart = function() {
   };
 
   var updateLocationHistogram = function () {
-    $("#locationhistogram").text("loading...");
+    $("#locationhistogram").text("Loading...");
 
-    Meteor.call("getHistogramDataForLocation",
-      Session.get("selected_location_name"), function (error, items) {
-        var column_names = [["Project Name", "Funding Amount"]];
-        var data = column_names.concat(items);
-        console.log(data);
-        var chart_data = google.visualization.arrayToDataTable(data);
+    if (Session.get("selected_location_name")) {
+      Meteor.call("getHistogramDataForLocation",
+        Session.get("selected_location_name"), function (error, items) {
+          var column_names = [["Project Name", "Funding Amount"]];
+          var data = column_names.concat(items);
+          console.log(data);
+          var chart_data = google.visualization.arrayToDataTable(data);
 
-        var title;
-        if (Session.get("selected_location_name")) {
-          title = '# Projects Per State for ' +
+          var title = 'Number of Projects per State for ' +
             Session.get("selected_location_name");
-        } else {
-          title = "Funding distribution for all projects";
-        }
 
-        var options = {
-          title: title,
-          enableInteractivity: false
-        };
+          var options = {
+            title: title,
+            enableInteractivity: false
+          };
 
-        var chart = new google.visualization.PieChart($('#locationhistogram')[0]);
-        chart.draw(chart_data, options);
-      });
+          var chart = new google.visualization.PieChart($('#locationhistogram')[0]);
+          chart.draw(chart_data, options);
+        });
+    } else {
+      $("#locationhistogram").text("Please select a country on the left.");
+    }
   };
 
   drawChart();
