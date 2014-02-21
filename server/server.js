@@ -68,8 +68,6 @@ Meteor.methods({
     });
     return category_counts;
   },
-
-
   getHistogramDataForCategory: function (category_id) {
     var projects;
 
@@ -90,6 +88,27 @@ Meteor.methods({
     var projects = Projects.find().fetch();
     _.each(projects, function(project) {
       var location = project.location.country;
+      if (counts[location]) {
+        counts[location] += 1;
+      } else {
+        counts[location] = 1;
+      }
+    });
+
+    return _.pairs(counts);
+  },
+  getHistogramDataForLocation: function (location) {
+    var projects;
+
+    if (location) {
+      projects = Projects.find({"location.country": location}, {fields: {name: 1, location: 1}}).fetch();
+    } else {
+      projects = Projects.find({}, {fields: {name: 1, location: 1}}).fetch();
+    }
+
+    var counts = {};
+    _.each(projects, function(project) {
+      var location = project.location.state;
       if (counts[location]) {
         counts[location] += 1;
       } else {

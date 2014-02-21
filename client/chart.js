@@ -84,7 +84,7 @@ var makeLocationChart = function() {
   var drawChart = function () {
     $("#locationchart").text("loading data...");
 
-    // Session.set("selected_category_id", null);
+    Session.set("selected_location_name", null);
 
     Meteor.call("getLocationPieChartData", function (error, category_counts) {
       // sort by count
@@ -97,21 +97,48 @@ var makeLocationChart = function() {
       var chart_data = google.visualization.arrayToDataTable(data);
 
       var options = {
-        title: '# Projects Per Location'
+        title: '# Projects Per Country'
       };
 
       var chart = new google.visualization.PieChart($('#locationchart')[0]);
       chart.draw(chart_data, options);
 
-      // google.visualization.events.addListener(chart, "select", function () {
-      //   Session.set("selected_category_id",
-      //     chart_data.getValue(chart.getSelection()[0].row, 2));
-      // });
+      google.visualization.events.addListener(chart, "select", function () {
+        Session.set("selected_location_name",
+          chart_data.getValue(chart.getSelection()[0].row, 0));
+      });
 
-      //Deps.autorun(updateHistogram);
+      Deps.autorun(updateLocationHistogram);
     });
   };
 
+  var updateLocationHistogram = function () {
+    $("#locationhistogram").text("loading...");
+
+    Meteor.call("getHistogramDataForLocation",
+      Session.get("selected_location_name"), function (error, items) {
+        var column_names = [["Project Name", "Funding Amount"]];
+        var data = column_names.concat(items);
+        console.log(data);
+        var chart_data = google.visualization.arrayToDataTable(data);
+
+        var title;
+        if (Session.get("selected_location_name")) {
+          title = '# Projects Per State for ' +
+            Session.get("selected_location_name");
+        } else {
+          title = "Funding distribution for all projects";
+        }
+
+        var options = {
+          title: title,
+          enableInteractivity: false
+        };
+
+        var chart = new google.visualization.PieChart($('#locationhistogram')[0]);
+        chart.draw(chart_data, options);
+      });
+  };
 
   drawChart();
 
