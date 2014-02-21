@@ -38,6 +38,8 @@ Meteor.methods({
       });
     });
   },
+
+
   getCategoryPieChartData: function () {
     if (Projects.find().count() === 0) {
       Meteor.call("scrape");
@@ -64,9 +66,10 @@ Meteor.methods({
       var number_entries = projectsInCategory(category_id).count();
       return [category_name, number_entries, category_id];
     });
-
     return category_counts;
   },
+
+
   getHistogramDataForCategory: function (category_id) {
     var projects;
 
@@ -80,5 +83,20 @@ Meteor.methods({
       function (doc) {
         return [doc.name, doc.pledged];
       });
+  },
+
+  getLocationPieChartData: function() {
+    var counts = {};
+    var projects = Projects.find().fetch();
+    _.each(projects, function(project) {
+      var location = project.location.country;
+      if (counts[location]) {
+        counts[location] += 1;
+      } else {
+        counts[location] = 1;
+      }
+    });
+
+    return _.pairs(counts);
   }
 });

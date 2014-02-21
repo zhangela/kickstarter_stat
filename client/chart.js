@@ -14,7 +14,7 @@ var category_names = {
   17: "Theatre"
 };
 
-var makeChart = function() {
+var makeFundingChart = function() {
   var drawChart = function () {
     $("#piechart").text("loading data...");
 
@@ -26,12 +26,12 @@ var makeChart = function() {
         return -row[1];
       });
 
-      var column_names = [["Category Name", "Category ID", "Count"]];
+      var column_names = [["Category Name", "Count", "Category ID"]];
       var data = column_names.concat(category_counts);
       var chart_data = google.visualization.arrayToDataTable(data);
 
       var options = {
-        title: 'Number of projects in each category'
+        title: '# Projects Per Category'
       };
 
       var chart = new google.visualization.PieChart($('#piechart')[0]);
@@ -76,6 +76,62 @@ var makeChart = function() {
   drawChart();
 };
 
+
+
+
+var makeLocationChart = function() {
+
+  var drawChart = function () {
+    $("#locationchart").text("loading data...");
+
+    // Session.set("selected_category_id", null);
+
+    Meteor.call("getLocationPieChartData", function (error, category_counts) {
+      // sort by count
+      category_counts = _.sortBy(category_counts, function (row) {
+        return -row[1];
+      });
+
+      var column_names = [["Location", "Count"]];
+      var data = column_names.concat(category_counts);
+      var chart_data = google.visualization.arrayToDataTable(data);
+
+      var options = {
+        title: '# Projects Per Location'
+      };
+
+      var chart = new google.visualization.PieChart($('#locationchart')[0]);
+      chart.draw(chart_data, options);
+
+      // google.visualization.events.addListener(chart, "select", function () {
+      //   Session.set("selected_category_id",
+      //     chart_data.getValue(chart.getSelection()[0].row, 2));
+      // });
+
+      //Deps.autorun(updateHistogram);
+    });
+  };
+
+
+  drawChart();
+
+};
+
 $(function () {
-  makeChart();
+  makeFundingChart();
+  makeLocationChart();
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
