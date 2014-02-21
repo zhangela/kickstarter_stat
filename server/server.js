@@ -95,7 +95,10 @@ Meteor.methods({
       }
     });
 
-    return _.pairs(counts);
+    // sort so that biggest ones are first
+    return _.sortBy(_.pairs(counts), function (pair) {
+      return -pair[1];
+    });
   },
   getHistogramDataForLocation: function (location) {
     var projects;
@@ -116,6 +119,9 @@ Meteor.methods({
       }
     });
 
-    return _.pairs(counts);
+    // sort so that biggest ones are first
+    return _.sortBy(_.pairs(counts), function (pair) {
+      return -pair[1];
+    });
   }
 });
